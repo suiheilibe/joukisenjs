@@ -7,79 +7,77 @@ Constants = {
   width: 640,
   height: 480,
   rdn: [0, 6, 12, 18, 24, 31, 37, 43, 48, 54, 60, 65, 71, 76, 81, 85, 90, 94, 98, 102, 106, 109, 112, 115, 118, 120, 122, 124, 125, 126, 127, 127, 127, 127, 127, 126, 125, 124, 122, 120, 118, 115, 112, 109, 106, 102, 98, 94, 90, 85, 81, 76, 71, 65, 60, 54, 48, 43, 37, 31, 24, 18, 12, 6, 0, -6, -12, -18, -24, -31, -37, -43, -48, -54, -60, -65, -71, -76, -81, -85, -90, -94, -98, -102, -106, -109, -112, -115, -118, -120, -122, -124, -125, -126, -127, -127, -127, -127, -127, -126, -125, -124, -122, -120, -118, -115, -112, -109, -106, -102, -98, -94, -90, -85, -81, -76, -71, -65, -60, -54, -48, -43, -37, -31, -24, -18, -12, -6],
-  wdx: 2
+  wdx: 2,
+  woc: 400,
+  wcolor: '#0000ff'
 };
 
 WaveSurface = enchant.Class.create(enchant.Surface, {
-  initialize: function(wys, wwidth) {
-    var c, i, wdx, wxcount, x;
-    this.wys = wys;
-    this.wwidth = wwidth;
-    enchant.Surface.call(this, this.wwidth, Constants.height);
+  initialize: function(wys, wwidth, wheight) {
+    var i, wdx, wxcount, x;
+    enchant.Surface.call(this, wwidth, wheight);
     this.clear();
-    c = this.context;
-    c.fillStyle = '#0000ff';
-    wxcount = this.wys.length;
+    this.context.fillStyle = Constants.wcolor;
+    wxcount = wys.length;
     i = 0;
     x = 0;
     wdx = Constants.wdx;
-    while (this.wwidth > 0) {
-      c.fillRect(x, this.wys[i], wdx, this.height - this.wys[i]);
+    while (wwidth > 0) {
+      this.context.fillRect(x, ~~(wys[i] - (Constants.height - wheight)), wdx, ~~Math.ceil(Constants.height - wys[i]));
       i++;
       if (i >= wxcount) {
         i = 0;
       }
       x += wdx;
-      this.wwidth -= wdx;
+      wwidth -= wdx;
     }
   }
 });
 
-Wave = enchant.Class.create(enchant.Group, {
+Wave = enchant.Class.create(enchant.Sprite, {
   initialize: function(ww1, ww2, wv1, wv2, wsp1, wsp2) {
-    var i, sf, wxcount;
-    this.ww1 = ww1;
-    this.ww2 = ww2;
-    this.wv1 = wv1;
-    this.wv2 = wv2;
-    this.wsp1 = wsp1;
-    this.wsp2 = wsp2;
-    enchant.Group.call(this);
-    wxcount = Constants.rdn.length * this.ww2 / this.ww1;
-    this.wys = (function() {
+    var i, maxwy, minwy, wheight, ws, wsp, wwidth, wx, wxcount, wy, wys;
+    wxcount = (ww1 === 0 ? 1 : Constants.rdn.length * ww2 / ww1);
+    maxwy = 0;
+    minwy = Constants.height;
+    wys = (function() {
       var _i, _results;
       _results = [];
       for (i = _i = 0; 0 <= wxcount ? _i < wxcount : _i > wxcount; i = 0 <= wxcount ? ++_i : --_i) {
-        _results.push(400 - (Constants.rdn[~~(i * this.ww1 / this.ww2) % 128] * this.wv1 / this.wv2));
+        wy = Constants.woc - (Constants.rdn[~~(i * ww1 / ww2) % 128] * wv1 / wv2);
+        maxwy = Math.max(maxwy, wy);
+        minwy = Math.min(minwy, wy);
+        _results.push(wy);
       }
       return _results;
-    }).call(this);
-    this.wwidth = 0;
-    while (this.wwidth < Constants.width) {
-      this.wwidth += wxcount * Constants.wdx;
+    })();
+    wwidth = 0;
+    wheight = ~~Math.ceil(Constants.height - minwy);
+    while (wwidth < Constants.width) {
+      wwidth += wxcount * Constants.wdx;
     }
-    this.wheight = Constants.height;
-    this.wsp = this.wsp2 / this.wsp1;
-    sf = new WaveSurface(this.wys, this.wwidth + this.wsp);
-    this.sp1 = new enchant.Sprite(this.wwidth + this.wsp, this.wheight);
-    this.sp1.image = sf;
-    this.sp1.x = 0;
-    this.sp2 = new enchant.Sprite(this.wwidth + this.wsp, this.wheight);
-    this.sp2.image = sf;
-    this.sp1.x = this.wwidth;
-    this.addChild(this.sp1);
-    this.addChild(this.sp2);
-    this.addEventListener('enterframe', this.proc);
-  },
-  proc: function() {
-    if (this.sp1.x + this.wwidth <= 0) {
-      this.sp1.x = this.sp2.x + this.wwidth;
-    }
-    if (this.sp2.x + this.wwidth <= 0) {
-      this.sp2.x = this.sp1.x + this.wwidth;
-    }
-    this.sp1.x -= this.wsp;
-    this.sp2.x -= this.wsp;
+    wsp = (wsp1 === 0 ? 0 : wsp2 / wsp1);
+    ws = new WaveSurface(wys, wwidth, wheight);
+    wx = 0;
+    enchant.Sprite.call(this, Constants.width, wheight);
+    this.x = 0;
+    this.y = minwy;
+    this.image = new enchant.Surface(this.width, this.height);
+    this.addEventListener('enterframe', function() {
+      var right, rspace, sw;
+      this.image.clear();
+      wx -= wsp;
+      right = wx + wwidth;
+      rspace = this.width - right;
+      if (right <= 0) {
+        wx = 0;
+        right = wwidth;
+      } else if (rspace > 0) {
+        this.image.draw(ws, 0, 0, rspace, wheight, right, 0, rspace, wheight);
+      }
+      sw = Math.min(this.width, right);
+      this.image.draw(ws, -wx, 0, sw, wheight, 0, 0, sw, wheight);
+    });
   }
 });
 
