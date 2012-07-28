@@ -17,6 +17,9 @@ Constants =
   wdx : 2 # 波描画の粗さ
   woc : 400 # 振動の中心
   wcolor : '#0000ff' # 波の色
+  bgcolor : '#000000'
+
+StageVars =
 
 WaveSurface = enchant.Class.create enchant.Surface,
   initialize : (wys, wwidth, wheight) ->
@@ -76,12 +79,23 @@ Wave = enchant.Class.create enchant.Sprite,
       return
     return
 
+TheShip = enchant.Class.create enchant.Sprite,
+  initialize : ->
+    enchant.Sprite.call @, 64, 32
+    game = enchant.Game.instance
+    @image = game.assets['ship.gif']
+    @x = 240
+    @y = 120
+
 TheGame = enchant.Class.create enchant.Game,
   initialize : ->
     enchant.Game.call @, Constants.width, Constants.height
-    @fps = 20
+    @fps = 30
+    @preload ['ship.gif']
     @onload = ->
+      @rootScene.backgroundColor = Constants.bgcolor
       @rootScene.addChild new Wave 1,2,1,2,1,4
+      @rootScene.addChild new TheShip
       return
     @start()
     return
