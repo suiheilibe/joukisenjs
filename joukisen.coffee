@@ -21,9 +21,9 @@ Constants =
 
 StageVars =
 
-WaveSurface = enchant.Class.create enchant.Surface,
+WaveSurface = Class.create Surface,
   initialize : (wys, wwidth, wheight) ->
-    enchant.Surface.call @, wwidth, wheight
+    Surface.call @, wwidth, wheight
     @clear()
     @context.fillStyle = Constants.wcolor
     wxcount = wys.length
@@ -40,7 +40,7 @@ WaveSurface = enchant.Class.create enchant.Surface,
       wwidth -= wdx
     return
 
-Wave = enchant.Class.create enchant.Sprite,
+Wave = Class.create Sprite,
   initialize : (ww1, ww2, wv1, wv2, wsp1, wsp2) ->
     wxcount = (if ww1 == 0 then 1 else Constants.rdn.length * ww2 / ww1)
     maxwy = 0
@@ -58,10 +58,10 @@ Wave = enchant.Class.create enchant.Sprite,
     ws = new WaveSurface wys, wwidth, wheight
     wx = 0
 
-    enchant.Sprite.call @, Constants.width, wheight
+    Sprite.call @, Constants.width, wheight
     @x = 0
     @y = minwy
-    @image = new enchant.Surface @width, @height
+    @image = new Surface @width, @height
     @addEventListener 'enterframe', ->
       @image.clear()
       wx -= wsp
@@ -79,17 +79,17 @@ Wave = enchant.Class.create enchant.Sprite,
       return
     return
 
-TheShip = enchant.Class.create enchant.Sprite,
+TheShip = Class.create Sprite,
   initialize : ->
-    enchant.Sprite.call @, 64, 32
-    game = enchant.Game.instance
+    Sprite.call @, 64, 32
+    game = Game.instance
     @image = game.assets['ship.gif']
     @x = 240
     @y = 120
 
-TheGame = enchant.Class.create enchant.Game,
+TheGame = Class.create Game,
   initialize : ->
-    enchant.Game.call @, Constants.width, Constants.height
+    Game.call @, Constants.width, Constants.height
     @fps = 30
     @preload ['ship.gif']
     @onload = ->

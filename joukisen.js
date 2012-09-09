@@ -13,10 +13,10 @@ Constants = {
   bgcolor: '#000000'
 };
 
-StageVars = WaveSurface = enchant.Class.create(enchant.Surface, {
+StageVars = WaveSurface = Class.create(Surface, {
   initialize: function(wys, wwidth, wheight) {
     var i, wdx, wxcount, x;
-    enchant.Surface.call(this, wwidth, wheight);
+    Surface.call(this, wwidth, wheight);
     this.clear();
     this.context.fillStyle = Constants.wcolor;
     wxcount = wys.length;
@@ -35,7 +35,7 @@ StageVars = WaveSurface = enchant.Class.create(enchant.Surface, {
   }
 });
 
-Wave = enchant.Class.create(enchant.Sprite, {
+Wave = Class.create(Sprite, {
   initialize: function(ww1, ww2, wv1, wv2, wsp1, wsp2) {
     var i, maxwy, minwy, wheight, ws, wsp, wwidth, wx, wxcount, wy, wys;
     wxcount = (ww1 === 0 ? 1 : Constants.rdn.length * ww2 / ww1);
@@ -60,10 +60,10 @@ Wave = enchant.Class.create(enchant.Sprite, {
     wsp = (wsp1 === 0 ? 0 : wsp2 / wsp1);
     ws = new WaveSurface(wys, wwidth, wheight);
     wx = 0;
-    enchant.Sprite.call(this, Constants.width, wheight);
+    Sprite.call(this, Constants.width, wheight);
     this.x = 0;
     this.y = minwy;
-    this.image = new enchant.Surface(this.width, this.height);
+    this.image = new Surface(this.width, this.height);
     this.addEventListener('enterframe', function() {
       var right, rspace, sw;
       this.image.clear();
@@ -82,20 +82,20 @@ Wave = enchant.Class.create(enchant.Sprite, {
   }
 });
 
-TheShip = enchant.Class.create(enchant.Sprite, {
+TheShip = Class.create(Sprite, {
   initialize: function() {
     var game;
-    enchant.Sprite.call(this, 64, 32);
-    game = enchant.Game.instance;
+    Sprite.call(this, 64, 32);
+    game = Game.instance;
     this.image = game.assets['ship.gif'];
     this.x = 240;
     return this.y = 120;
   }
 });
 
-TheGame = enchant.Class.create(enchant.Game, {
+TheGame = Class.create(Game, {
   initialize: function() {
-    enchant.Game.call(this, Constants.width, Constants.height);
+    Game.call(this, Constants.width, Constants.height);
     this.fps = 30;
     this.preload(['ship.gif']);
     this.onload = function() {
