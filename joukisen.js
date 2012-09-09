@@ -100,13 +100,16 @@ TheShip = Class.create(Sprite, {
 
 TheGame = Class.create(Game, {
   initialize: function() {
+    var bgm;
     Game.call(this, Constants.width, Constants.height);
-    this.fps = 30;
+    this.fps = 60;
     this.preload(['ship.gif']);
+    bgm = Sound.load('lastbt3_loop.mp3');
     this.onload = function() {
       this.rootScene.backgroundColor = Constants.bgcolor;
       this.rootScene.addChild(new Wave(1, 2, 1, 2, 1, 4));
       this.rootScene.addChild(new TheShip);
+      bgm.play();
     };
     this.start();
   }
