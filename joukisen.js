@@ -35,9 +35,10 @@ StageVars = WaveSurface = Class.create(Surface, {
   }
 });
 
-Wave = Class.create(Sprite, {
+Wave = Class.create(Group, {
   initialize: function(ww1, ww2, wv1, wv2, wsp1, wsp2) {
-    var i, maxwy, minwy, wheight, ws, wsp, wwidth, wx, wxcount, wy, wys;
+    var i, maxwy, minwy, ws, wxcount, wy, wys;
+    Group.call(this);
     wxcount = (ww1 === 0 ? 1 : Constants.rdn.length * ww2 / ww1);
     maxwy = 0;
     minwy = Constants.height;
@@ -45,39 +46,43 @@ Wave = Class.create(Sprite, {
       var _i, _results;
       _results = [];
       for (i = _i = 0; 0 <= wxcount ? _i < wxcount : _i > wxcount; i = 0 <= wxcount ? ++_i : --_i) {
-        wy = Constants.woc - (Constants.rdn[~~(i * ww1 / ww2) % 128] * wv1 / wv2);
+        wy = ~~(Constants.woc - (Constants.rdn[~~(i * ww1 / ww2) % 128] * wv1 / wv2));
         maxwy = Math.max(maxwy, wy);
         minwy = Math.min(minwy, wy);
         _results.push(wy);
       }
       return _results;
     })();
-    wwidth = 0;
-    wheight = ~~Math.ceil(Constants.height - minwy);
-    while (wwidth < Constants.width) {
-      wwidth += wxcount * Constants.wdx;
+    this.wwidth = 0;
+    this.wheight = Constants.height - minwy;
+    while (this.wwidth < Constants.width) {
+      this.wwidth += wxcount * Constants.wdx;
     }
-    wsp = (wsp1 === 0 ? 0 : wsp2 / wsp1);
-    ws = new WaveSurface(wys, wwidth, wheight);
-    wx = 0;
-    Sprite.call(this, Constants.width, wheight);
-    this.x = 0;
-    this.y = minwy;
-    this.image = new Surface(this.width, this.height);
-    this.addEventListener('enterframe', function() {
-      var right, rspace, sw;
-      this.image.clear();
-      wx -= wsp;
-      right = wx + wwidth;
-      rspace = this.width - right;
+    this.wsp = (wsp1 === 0 ? 0 : wsp2 / wsp1);
+    ws = new WaveSurface(wys, this.wwidth, this.wheight);
+    this.wx = 0;
+    this.sp1 = new Sprite(this.wwidth, this.wheight);
+    this.sp1.image = ws;
+    this.sp1.x = this.wx;
+    this.sp1.y = minwy;
+    this.sp2 = new Sprite(this.wwidth, this.wheight);
+    this.sp2.image = ws;
+    this.sp2.x = this.wx + this.wwidth;
+    this.sp2.y = minwy;
+    this.addChild(this.sp1);
+    this.addChild(this.sp2);
+    return this.addEventListener('enterframe', function() {
+      var right, rspace;
+      this.wx -= this.wsp;
+      right = this.wx + this.wwidth;
+      rspace = this.wwidth - right;
       if (right <= 0) {
-        wx = 0;
-        right = wwidth;
+        this.wx = 0;
+        right = this.wwidth;
       } else if (rspace > 0) {
-        this.image.draw(ws, 0, 0, rspace, wheight, right, 0, rspace, wheight);
+        this.sp2.x = right;
       }
-      sw = Math.min(this.width, right);
-      this.image.draw(ws, -wx, 0, sw, wheight, 0, 0, sw, wheight);
+      this.sp1.x = this.wx;
     });
   }
 });

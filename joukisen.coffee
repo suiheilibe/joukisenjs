@@ -40,44 +40,48 @@ WaveSurface = Class.create Surface,
       wwidth -= wdx
     return
 
-Wave = Class.create Sprite,
+Wave = Class.create Group,
   initialize : (ww1, ww2, wv1, wv2, wsp1, wsp2) ->
+    Group.call @
     wxcount = (if ww1 == 0 then 1 else Constants.rdn.length * ww2 / ww1)
     maxwy = 0
     minwy = Constants.height
     wys = for i in [0...wxcount]
-      wy = Constants.woc - (Constants.rdn[~~(i * ww1 / ww2) % 128] * wv1 / wv2)
+      wy = ~~(Constants.woc - (Constants.rdn[~~(i * ww1 / ww2) % 128] * wv1 / wv2))
       maxwy = Math.max(maxwy, wy)
       minwy = Math.min(minwy, wy)
       wy
-    wwidth = 0
-    wheight = ~~Math.ceil(Constants.height - minwy)
-    while wwidth < Constants.width
-      wwidth += wxcount * Constants.wdx
-    wsp = (if wsp1 == 0 then 0 else wsp2 / wsp1)
-    ws = new WaveSurface wys, wwidth, wheight
-    wx = 0
+    @wwidth = 0
+    @wheight = Constants.height - minwy
+    while @wwidth < Constants.width
+      @wwidth += wxcount * Constants.wdx
+    @wsp = (if wsp1 == 0 then 0 else wsp2 / wsp1)
+    ws = new WaveSurface wys, @wwidth, @wheight
+    @wx = 0
 
-    Sprite.call @, Constants.width, wheight
-    @x = 0
-    @y = minwy
-    @image = new Surface @width, @height
+    @sp1 = new Sprite @wwidth, @wheight
+    @sp1.image = ws
+    @sp1.x = @wx
+    @sp1.y = minwy
+    @sp2 = new Sprite @wwidth, @wheight
+    @sp2.image = ws
+    @sp2.x = @wx + @wwidth
+    @sp2.y = minwy
+
+    @addChild @sp1
+    @addChild @sp2
+
     @addEventListener 'enterframe', ->
-      @image.clear()
-      wx -= wsp
-      right = wx + wwidth # 左側の波の右端
-      rspace = @width - right # 左側の波とステージ右端との間
+      @wx -= @wsp
+      right = @wx + @wwidth # 左側の波の右端
+      rspace = @wwidth - right # 左側の波とステージ右端との間
       if right <= 0
-        wx = 0
-        right = wwidth
+        @wx = 0
+        right = @wwidth
       else if rspace > 0
-        # 右側の波も描画する
-        @image.draw ws, 0, 0, rspace, wheight, right, 0, rspace, wheight
-      # 左側の並の描画
-      sw = Math.min(@width, right)
-      @image.draw ws, -wx, 0, sw, wheight, 0, 0, sw, wheight
+        @sp2.x = right
+      @sp1.x = @wx
       return
-    return
 
 TheShip = Class.create Sprite,
   initialize : ->
