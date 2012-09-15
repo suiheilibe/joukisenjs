@@ -24,7 +24,7 @@ StageVars = WaveSurface = Class.create(Surface, {
     x = 0;
     wdx = Constants.wdx;
     while (wwidth > 0) {
-      this.context.fillRect(x, ~~(wys[i] - (Constants.height - wheight)), wdx, ~~Math.ceil(Constants.height - wys[i]));
+      this.context.fillRect(x, wys[i] - (Constants.height - wheight), wdx, Constants.height - wys[i]);
       i++;
       if (i >= wxcount) {
         i = 0;
