@@ -96,7 +96,7 @@ TheGame = Class.create Game,
     Game.call @, Constants.width, Constants.height
     @fps = 60
     @preload ['ship.gif']
-    bgm = Sound.load('lastbt3_loop.mp3')
+    #bgm = Sound.load('lastbt3_loop.mp3')
     @onload = ->
       @rootScene.backgroundColor = Constants.bgcolor
       @rootScene.addChild new Wave 1,2,1,2,1,4
