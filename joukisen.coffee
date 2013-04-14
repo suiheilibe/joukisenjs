@@ -87,7 +87,7 @@ TheShip = Class.create Sprite,
   initialize : ->
     Sprite.call @, 64, 32
     game = Game.instance
-    @image = game.assets['ship.gif']
+    @image = game.assets['res/img/ship.gif']
     @x = 240
     @y = 120
 
@@ -95,7 +95,7 @@ TheGame = Class.create Game,
   initialize : ->
     Game.call @, Constants.WIDTH, Constants.HEIGHT
     @fps = 60
-    @preload ['ship.gif']
+    @preload ['res/img/ship.gif']
     #bgm = Sound.load('lastbt3_loop.mp3')
     @onload = ->
       @rootScene.backgroundColor = Constants.BGCOLOR
