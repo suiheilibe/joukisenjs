@@ -91,7 +91,7 @@ TheShip = Class.create Sprite,
     @x = 240
     @y = 120
 
-TheGame = Class.create Game,
+TheGame = Class.create Core,
   initialize : ->
     Game.call @, Constants.WIDTH, Constants.HEIGHT
     @fps = 60
