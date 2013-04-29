@@ -94,15 +94,20 @@ TheShip = Class.create Sprite,
 TheStage = Class.create Scene,
   initialize : ->
     Scene.call @
+    game = Game.instance
+    bgm = game.assets['res/snd/stage1.mp3']
     @backgroundColor = Constants.BGCOLOR
     @addChild new Wave 1,2,1,2,1,4
     @addChild new TheShip
+    @addEventListener 'enterframe', ->
+      bgm.play()
 
 TheGame = Class.create Core,
   initialize : ->
     Game.call @, Constants.WIDTH, Constants.HEIGHT
     @fps = 60
     @preload ['res/img/ship.gif']
+    @preload ['res/snd/stage1.mp3']
     @onload = ->
       @replaceScene new TheStage
       return
