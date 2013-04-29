@@ -91,19 +91,21 @@ TheShip = Class.create Sprite,
     @x = 240
     @y = 120
 
+TheStage = Class.create Scene,
+  initialize : ->
+    Scene.call @
+    @backgroundColor = Constants.BGCOLOR
+    @addChild new Wave 1,2,1,2,1,4
+    @addChild new TheShip
+
 TheGame = Class.create Core,
   initialize : ->
     Game.call @, Constants.WIDTH, Constants.HEIGHT
     @fps = 60
     @preload ['res/img/ship.gif']
-    #bgm = Sound.load('lastbt3_loop.mp3')
     @onload = ->
-      @rootScene.backgroundColor = Constants.BGCOLOR
-      @rootScene.addChild new Wave 1,2,1,2,1,4
-      @rootScene.addChild new TheShip
-      bgm.play()
+      @replaceScene new TheStage
       return
-    #@addEventListener 'enterframe', ->
     @start()
     return
 
