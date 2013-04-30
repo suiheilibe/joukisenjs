@@ -91,7 +91,7 @@ TheShip = Class.create(Sprite, {
   initialize: function() {
     var game;
     Sprite.call(this, 64, 32);
-    game = Game.instance;
+    game = Core.instance;
     this.image = game.assets['res/img/ship.gif'];
     this.x = 240;
     return this.y = 120;
@@ -102,7 +102,7 @@ TheStage = Class.create(Scene, {
   initialize: function() {
     var bgm, game;
     Scene.call(this);
-    game = Game.instance;
+    game = Core.instance;
     bgm = game.assets['res/snd/stage1.mp3'];
     this.backgroundColor = Constants.BGCOLOR;
     this.addChild(new Wave(1, 2, 1, 2, 1, 4));
@@ -115,7 +115,7 @@ TheStage = Class.create(Scene, {
 
 TheGame = Class.create(Core, {
   initialize: function() {
-    Game.call(this, Constants.WIDTH, Constants.HEIGHT);
+    Core.call(this, Constants.WIDTH, Constants.HEIGHT);
     this.fps = 60;
     this.preload(['res/img/ship.gif']);
     this.preload(['res/snd/stage1.mp3']);
