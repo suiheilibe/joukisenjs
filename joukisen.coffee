@@ -99,8 +99,18 @@ TheStage = Class.create Scene,
     @backgroundColor = Constants.BGCOLOR
     @addChild new Wave 1,2,1,2,1,4
     @addChild new TheShip
+    @addEventListener 'enter', ->
+      if bgm.src # Web Audio API loop implementation in a very ugly way
+        bufsrc = bgm.src
+        bufsrc.loop = true
+        bufsrc.buffer = bgm.buffer
+        bufsrc.connect bgm.connectTarget
+        bufsrc.noteOn 0
+        return
     @addEventListener 'enterframe', ->
-      bgm.play()
+      if ! bgm.src
+        bgm.play()
+        return
 
 TheGame = Class.create Core,
   initialize : ->

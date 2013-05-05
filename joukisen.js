@@ -113,8 +113,21 @@ TheStage = Class.create(Scene, {
     this.backgroundColor = Constants.BGCOLOR;
     this.addChild(new Wave(1, 2, 1, 2, 1, 4));
     this.addChild(new TheShip);
+    this.addEventListener('enter', function() {
+      var bufsrc;
+
+      if (bgm.src) {
+        bufsrc = bgm.src;
+        bufsrc.loop = true;
+        bufsrc.buffer = bgm.buffer;
+        bufsrc.connect(bgm.connectTarget);
+        bufsrc.noteOn(0);
+      }
+    });
     return this.addEventListener('enterframe', function() {
-      return bgm.play();
+      if (!bgm.src) {
+        bgm.play();
+      }
     });
   }
 });
