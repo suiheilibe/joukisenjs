@@ -86,7 +86,7 @@ Wave = Class.create Group,
 TheShip = Class.create Sprite,
   initialize : ->
     Sprite.call @, 64, 32
-    game = Game.instance
+    game = Core.instance
     @image = game.assets['res/img/ship.gif']
     @x = 240
     @y = 120
@@ -94,17 +94,27 @@ TheShip = Class.create Sprite,
 TheStage = Class.create Scene,
   initialize : ->
     Scene.call @
-    game = Game.instance
+    game = Core.instance
     bgm = game.assets['res/snd/stage1.mp3']
     @backgroundColor = Constants.BGCOLOR
     @addChild new Wave 1,2,1,2,1,4
     @addChild new TheShip
+    @addEventListener 'enter', ->
+      if bgm.src # Web Audio API loop implementation in a very ugly way
+        bufsrc = bgm.src
+        bufsrc.loop = true
+        bufsrc.buffer = bgm.buffer
+        bufsrc.connect bgm.connectTarget
+        bufsrc.noteOn 0
+        return
     @addEventListener 'enterframe', ->
-      bgm.play()
+      if ! bgm.src
+        bgm.play()
+        return
 
 TheGame = Class.create Core,
   initialize : ->
-    Game.call @, Constants.WIDTH, Constants.HEIGHT
+    Core.call @, Constants.WIDTH, Constants.HEIGHT
     @fps = 60
     @preload ['res/img/ship.gif']
     @preload ['res/snd/stage1.mp3']
