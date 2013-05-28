@@ -1,4 +1,5 @@
 #!coffeescript
+"use strict"
 
 enchant()
 
@@ -51,36 +52,36 @@ Wave = Class.create Group,
       maxwy = Math.max(maxwy, wy)
       minwy = Math.min(minwy, wy)
       wy
-    @wwidth = 0
-    @wheight = Constants.HEIGHT - minwy
-    while @wwidth < Constants.WIDTH
-      @wwidth += wxcount * Constants.WDX
-    @wsp = (if wsp1 == 0 then 0 else wsp2 / wsp1)
-    ws = new WaveSurface wys, @wwidth, @wheight
-    @wx = 0
+    wwidth = 0
+    wheight = Constants.HEIGHT - minwy
+    while wwidth < Constants.WIDTH
+      wwidth += wxcount * Constants.WDX
+    wsp = (if wsp1 == 0 then 0 else wsp2 / wsp1)
+    ws = new WaveSurface wys, wwidth, wheight
+    wx = 0
 
-    @sp1 = new Sprite @wwidth, @wheight
-    @sp1.image = ws
-    @sp1.x = @wx
-    @sp1.y = minwy
-    @sp2 = new Sprite @wwidth, @wheight
-    @sp2.image = ws
-    @sp2.x = @wx + @wwidth
-    @sp2.y = minwy
+    sp1 = new Sprite wwidth, wheight
+    sp1.image = ws
+    sp1.x = wx
+    sp1.y = minwy
+    sp2 = new Sprite wwidth, wheight
+    sp2.image = ws
+    sp2.x = wx + wwidth
+    sp2.y = minwy
 
-    @addChild @sp1
-    @addChild @sp2
+    @addChild sp1
+    @addChild sp2
 
     @addEventListener 'enterframe', ->
-      @wx -= @wsp
-      right = @wx + @wwidth # 左側の波の右端
-      rspace = @wwidth - right # 左側の波とステージ右端との間
+      wx -= wsp
+      right = wx + wwidth # 左側の波の右端
+      rspace = wwidth - right # 左側の波とステージ右端との間
       if right <= 0
-        @wx = 0
-        right = @wwidth
+        wx = 0
+        right = wwidth
       else if rspace > 0
-        @sp2.x = right
-      @sp1.x = @wx
+        sp2.x = right
+      sp1.x = wx
       return
 
 TheShip = Class.create Sprite,
