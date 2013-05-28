@@ -84,6 +84,9 @@ Wave = Class.create Group,
       sp1.x = wx
       return
 
+    @getWaveTop = (x) ->
+      wys[((x - wx) / Constants.WDX) % wxcount]
+
 TheShip = Class.create Sprite,
   initialize : ->
     Sprite.call @, 64, 32
@@ -98,8 +101,10 @@ TheStage = Class.create Scene,
     game = Core.instance
     bgm = game.assets['res/snd/stage1.mp3']
     @backgroundColor = Constants.BGCOLOR
-    @addChild new Wave 1,2,1,2,1,4
-    @addChild new TheShip
+    wave = new Wave 1,2,1,2,1,4
+    ship = new TheShip
+    @addChild wave
+    @addChild ship
     @addEventListener 'enter', ->
       if bgm.src # Web Audio API loop implementation in a very ugly way
         bufsrc = bgm.src
@@ -109,6 +114,7 @@ TheStage = Class.create Scene,
         bufsrc.noteOn 0
         return
     @addEventListener 'enterframe', ->
+      ship.y = wave.getWaveTop(ship.x + 20) - 20
       if ! bgm.src
         bgm.play()
         return
