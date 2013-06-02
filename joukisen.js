@@ -89,21 +89,24 @@ Wave = Class.create(Group, {
       }
       sp1.x = wx;
     });
-    return this.getWaveTop = function(x) {
+    this.getWaveTop = function(x) {
       return wys[((x - wx) / Constants.WDX) % wxcount];
     };
   }
 });
 
 TheShip = Class.create(Sprite, {
-  initialize: function() {
+  initialize: function(wave) {
     var game;
 
     Sprite.call(this, 64, 32);
     game = Core.instance;
     this.image = game.assets['res/img/ship.gif'];
     this.x = 240;
-    return this.y = 120;
+    this.y = 120;
+    return this.addEventListener('enterframe', function() {
+      this.y = wave.getWaveTop(this.x + 32) - 28;
+    });
   }
 });
 
@@ -115,8 +118,8 @@ TheStage = Class.create(Scene, {
     game = Core.instance;
     bgm = game.assets['res/snd/stage1.mp3'];
     this.backgroundColor = Constants.BGCOLOR;
-    wave = new Wave(1, 2, 1, 2, 1, 4);
-    ship = new TheShip;
+    wave = new Wave(1, 2, 1, 4, 1, 8);
+    ship = new TheShip(wave);
     this.addChild(wave);
     this.addChild(ship);
     this.addEventListener('enter', function() {
@@ -131,7 +134,6 @@ TheStage = Class.create(Scene, {
       }
     });
     return this.addEventListener('enterframe', function() {
-      ship.y = wave.getWaveTop(ship.x + 20) - 20;
       if (!bgm.src) {
         bgm.play();
       }

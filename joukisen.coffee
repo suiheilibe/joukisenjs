@@ -85,15 +85,20 @@ Wave = Class.create Group,
       return
 
     @getWaveTop = (x) ->
-      wys[((x - wx) / Constants.WDX) % wxcount]
+      return wys[((x - wx) / Constants.WDX) % wxcount]
+
+    return
 
 TheShip = Class.create Sprite,
-  initialize : ->
+  initialize : (wave) ->
     Sprite.call @, 64, 32
     game = Core.instance
     @image = game.assets['res/img/ship.gif']
     @x = 240
     @y = 120
+    @addEventListener 'enterframe', ->
+      @y = wave.getWaveTop(@x + 32) - 28
+      return
 
 TheStage = Class.create Scene,
   initialize : ->
@@ -101,8 +106,9 @@ TheStage = Class.create Scene,
     game = Core.instance
     bgm = game.assets['res/snd/stage1.mp3']
     @backgroundColor = Constants.BGCOLOR
-    wave = new Wave 1,2,1,2,1,4
-    ship = new TheShip
+    #wave = new Wave 1,2,1,2,1,4
+    wave = new Wave 1,2,1,4,1,8
+    ship = new TheShip wave
     @addChild wave
     @addChild ship
     @addEventListener 'enter', ->
@@ -114,7 +120,6 @@ TheStage = Class.create Scene,
         bufsrc.noteOn 0
         return
     @addEventListener 'enterframe', ->
-      ship.y = wave.getWaveTop(ship.x + 20) - 20
       if ! bgm.src
         bgm.play()
         return
