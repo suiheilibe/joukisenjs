@@ -127,7 +127,7 @@ TheStage = Class.create Scene,
 TheGame = Class.create Core,
   initialize : ->
     Core.call @, Constants.WIDTH, Constants.HEIGHT
-    @fps = 60
+    @fps = 30
     @preload ['res/img/ship.gif']
     @preload ['res/snd/stage1.mp3']
     @onload = ->

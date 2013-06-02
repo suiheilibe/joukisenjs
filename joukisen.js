@@ -144,7 +144,7 @@ TheStage = Class.create(Scene, {
 TheGame = Class.create(Core, {
   initialize: function() {
     Core.call(this, Constants.WIDTH, Constants.HEIGHT);
-    this.fps = 60;
+    this.fps = 30;
     this.preload(['res/img/ship.gif']);
     this.preload(['res/snd/stage1.mp3']);
     this.onload = function() {
