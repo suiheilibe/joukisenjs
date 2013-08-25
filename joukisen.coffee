@@ -97,6 +97,10 @@ TheShip = Class.create Sprite,
     @x = 240
     @y = 120
     @addEventListener 'enterframe', ->
+      if game.input.right
+        @x += 2
+      else if game.input.left
+        @x -= 2
       @y = wave.getWaveTop(@x + 32) - 28
       return
 
