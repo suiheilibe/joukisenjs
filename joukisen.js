@@ -90,7 +90,7 @@ Wave = Class.create(Group, {
       sp1.x = wx;
     });
     this.getWaveTop = function(x) {
-      return wys[((x - wx) / Constants.WDX) % wxcount];
+      return wys[~~((x - wx) / Constants.WDX) % wxcount];
     };
   }
 });
@@ -106,9 +106,9 @@ TheShip = Class.create(Sprite, {
     this.y = 120;
     return this.addEventListener('enterframe', function() {
       if (game.input.right) {
-        this.x += 2;
+        this.x += 1;
       } else if (game.input.left) {
-        this.x -= 2;
+        this.x -= 1;
       }
       this.y = wave.getWaveTop(this.x + 32) - 28;
     });

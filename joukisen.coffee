@@ -85,7 +85,7 @@ Wave = Class.create Group,
       return
 
     @getWaveTop = (x) ->
-      return wys[((x - wx) / Constants.WDX) % wxcount]
+      return wys[~~((x - wx) / Constants.WDX) % wxcount]
 
     return
 
@@ -98,9 +98,9 @@ TheShip = Class.create Sprite,
     @y = 120
     @addEventListener 'enterframe', ->
       if game.input.right
-        @x += 2
+        @x += 1
       else if game.input.left
-        @x -= 2
+        @x -= 1
       @y = wave.getWaveTop(@x + 32) - 28
       return
 
