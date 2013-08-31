@@ -94,6 +94,7 @@ TheShip = Class.create Sprite,
     Sprite.call @, 64, 32
     game = Core.instance
     @image = game.assets['res/img/ship.gif']
+    @frame = (0 for i in [1..game.fps]).concat(1 for i in [1..game.fps])
     @x = 240
     @y = 120
     @addEventListener 'enterframe', ->

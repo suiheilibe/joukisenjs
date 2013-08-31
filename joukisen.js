@@ -97,11 +97,28 @@ Wave = Class.create(Group, {
 
 TheShip = Class.create(Sprite, {
   initialize: function(wave) {
-    var game;
+    var game, i;
 
     Sprite.call(this, 64, 32);
     game = Core.instance;
     this.image = game.assets['res/img/ship.gif'];
+    this.frame = ((function() {
+      var _i, _ref, _results;
+
+      _results = [];
+      for (i = _i = 1, _ref = game.fps; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        _results.push(0);
+      }
+      return _results;
+    })()).concat((function() {
+      var _i, _ref, _results;
+
+      _results = [];
+      for (i = _i = 1, _ref = game.fps; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        _results.push(1);
+      }
+      return _results;
+    })());
     this.x = 240;
     this.y = 120;
     return this.addEventListener('enterframe', function() {
