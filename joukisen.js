@@ -101,7 +101,7 @@ TheShip = Class.create(Sprite, {
 
     Sprite.call(this, 64, 32);
     game = Core.instance;
-    this.image = game.assets['res/img/ship.gif'];
+    this.image = game.assets['res/img/char.gif'];
     this.frame = ((function() {
       var _i, _ref, _results;
 
@@ -167,7 +167,7 @@ TheGame = Class.create(Core, {
   initialize: function() {
     Core.call(this, Constants.WIDTH, Constants.HEIGHT);
     this.fps = 30;
-    this.preload(['res/img/ship.gif']);
+    this.preload(['res/img/char.gif']);
     this.preload(['res/snd/stage1.mp3']);
     this.onload = function() {
       this.replaceScene(new TheStage);

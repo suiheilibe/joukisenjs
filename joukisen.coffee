@@ -93,7 +93,7 @@ TheShip = Class.create Sprite,
   initialize : (wave) ->
     Sprite.call @, 64, 32
     game = Core.instance
-    @image = game.assets['res/img/ship.gif']
+    @image = game.assets['res/img/char.gif']
     @frame = (0 for i in [1..game.fps]).concat(1 for i in [1..game.fps])
     @x = 240
     @y = 120
@@ -133,7 +133,7 @@ TheGame = Class.create Core,
   initialize : ->
     Core.call @, Constants.WIDTH, Constants.HEIGHT
     @fps = 30
-    @preload ['res/img/ship.gif']
+    @preload ['res/img/char.gif']
     @preload ['res/snd/stage1.mp3']
     @onload = ->
       @replaceScene new TheStage
