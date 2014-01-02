@@ -89,6 +89,20 @@ Wave = Class.create Group,
 
     return
 
+Sight = Class.create Sprite,
+  initialize : () ->
+    Sprite.call @, 32, 32
+    game = Core.instance
+    @image = game.assets['res/img/char.gif']
+    @frame = 10
+    @addEventListener 'enterframe', ->
+      return
+  # 中心位置を指定する
+  moveSightTo : (x, y) ->
+    @x = x - 16
+    @y = y - 16
+    return
+
 TheShip = Class.create Sprite,
   initialize : (wave) ->
     Sprite.call @, 64, 32
@@ -114,8 +128,10 @@ TheStage = Class.create Scene,
     #wave = new Wave 1,2,1,2,1,4
     wave = new Wave 1,2,1,4,1,8
     ship = new TheShip wave
+    sight = new Sight
     @addChild wave
     @addChild ship
+    @addChild sight
     @addEventListener 'enter', ->
       if bgm.src # Web Audio API loop implementation in a very ugly way
         bufsrc = bgm.src
@@ -128,6 +144,9 @@ TheStage = Class.create Scene,
       if ! bgm.src
         bgm.play()
         return
+    @addEventListener 'touchend', (e) ->
+      sight.moveSightTo e.localX, e.localY
+      return
 
 TheGame = Class.create Core,
   initialize : ->
